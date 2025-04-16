@@ -2,7 +2,7 @@
 ## 使用方法
 1. 确保你的计算机能够被远程唤醒（可能需要关闭windows快速启动，详情请见：https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/wake-on-lan-feature）
 2. 申请一个mqtt服务器，记录服务器域名、端口、用户名、密码、根证书
-3. 打开`config_default.cpp`，依次填写，请注意不同设备的`mqtt_client_id`与`device_id`不能重复，mqtt服务器
+3. 打开`config_default.cpp`，依次填写，请注意不同设备的`mqtt_client_id`不能重复，mqtt服务器认为`mqtt_client_id`是唯一的
 4. 将`config_default.cpp`重命名为`config.cpp`并移动到`src`下
 5. 注意`src/main.cpp`中`LED_BUILDIN`应修改为你的开发板上的build-in led，我的开发板是esp32 supermini开发板
 6. 使用`vscode`打开项目，并安装`PlatformIO IDE`扩展，进行烧录
