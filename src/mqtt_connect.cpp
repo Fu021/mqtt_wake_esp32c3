@@ -8,6 +8,7 @@
 #define CHECK_ALIVE 0
 #define ALIVE 1
 #define WAKE 2
+#define WAKE_SEND 3
 
 WiFiClientSecure wifi_client;
 PubSubClient mqtt_client(wifi_client);
@@ -16,7 +17,6 @@ JsonDocument alive_reply;
 void mqtt_connect()
 {
     alive_reply["id"] = device_id;
-    alive_reply["msg"] = ALIVE;
     alive_reply["time"] = 0;
 
     wifi_client.setCACert(root_ca);
@@ -45,11 +45,12 @@ void callback(char* topic, byte* payload, unsigned int length)
 
     if (id != device_id)
         return;
-    if (current_time - time > 300)
+    if (current_time > 300 + time)
         return;
     
     if (msg == CHECK_ALIVE)
     {
+        alive_reply["msg"] = ALIVE;
         alive_reply["time"] = current_time;
         serializeJson(alive_reply,message);
         mqtt_client.publish("wake",message.c_str());
@@ -57,6 +58,10 @@ void callback(char* topic, byte* payload, unsigned int length)
     if (msg == WAKE)
     {
         wake();
+        alive_reply["msg"] = WAKE_SEND;
+        alive_reply["time"] = current_time;
+        serializeJson(alive_reply,message);
+        mqtt_client.publish("wake",message.c_str());
     }
         
 }
